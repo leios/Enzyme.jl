@@ -963,4 +963,7 @@ end
 	@test jac[2] ≈ [ 1.0,  0.0,  0.0]
 end
 
-
+using CUDA
+if CUDA.functional()
+    include("cuda.jl")
+end
