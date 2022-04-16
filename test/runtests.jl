@@ -931,4 +931,21 @@ end
 	@test jac[2] ≈ [ 1.0,  0.0,  0.0]
 end
 
+@testset "Const arg" begin
+	x = Float32[3]
+	w = Float32[1]
+	dw = zero(w)
 
+	function inactiveArg(w, x, cond)
+	   if cond
+		  x = copy(x)
+	   end
+	  @inbounds w[1] * x[1]
+	end
+
+	Enzyme.autodiff(loss, Active, Duplicated(w, dw), Const(x), Const(false))
+
+    @test x ≈ [3.0]
+    @test w ≈ [1.0]
+    @test dw ≈ [3.0]
+end
